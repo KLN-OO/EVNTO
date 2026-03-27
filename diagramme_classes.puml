@@ -1,0 +1,116 @@
+@startuml Diagramme de Classes - Backend Evnto
+
+' ==========================================
+' ENTITÉS (Tables de base de données)
+' ==========================================
+
+class Utilisateur {
+    + utilisateur_id : INTEGER <<PK>>
+    + nom_utilisateur : STRING
+    + email : STRING
+    + mot_de_passe : STRING
+    + prenom : STRING
+    + nom : STRING
+    + cree_le : DATE
+    + role_id : INTEGER <<FK>>
+    --
+    + login() : JSON
+    + register() : JSON
+    + getMe() : JSON
+    + updateMe() : JSON
+}
+
+class Evenement {
+    + evenement_id : INTEGER <<PK>>
+    + titre : STRING
+    + description : TEXT
+    + date_debut : DATE
+    + date_fin : DATE
+    + categorie_id : INTEGER <<FK>>
+    + est_publie : BOOLEAN
+    + lieu_id : INTEGER <<FK>>
+    + organisateur_id : INTEGER <<FK>>
+    + cree_le : DATE
+    --
+    + getAllPublic() : JSON
+    + getByIdPublic() : JSON
+    + getFilteredPublic() : JSON
+    + create() : JSON
+    + update() : JSON
+    + publish() : JSON
+    + delete() : JSON
+    + uploadImage() : JSON
+}
+
+class Inscription {
+    + inscription_id : INTEGER <<PK>>
+    + utilisateur_id : INTEGER <<FK>>
+    + evenement_id : INTEGER <<FK>>
+    + date_inscription : DATE
+    --
+    + create() : JSON
+    + cancel() : JSON
+    + getByEvent() : JSON
+    + getMine() : JSON
+}
+
+class Role {
+    + role_id : INTEGER <<PK>>
+    + libelle : STRING
+}
+
+class Categorie {
+    + categorie_id : INTEGER <<PK>>
+    + nom : STRING
+}
+
+class Lieu {
+    + lieu_id : INTEGER <<PK>>
+    + nom : STRING
+    + adresse : STRING
+    + ville : STRING
+    + etat : STRING
+    + code_postal : STRING
+    + pays : STRING
+}
+
+' ==========================================
+' ASSOCIATIONS AVEC CARDINALITÉS ET VERBES
+' ==========================================
+
+Utilisateur "a" -- "est attribué à" Role : 1..1
+Evenement "appartient à" -- "contient" Categorie : 1..1
+Evenement "se déroule à" -- "accueille" Lieu : 1..1
+Evenement "est organisé par" -- "organise" Utilisateur : 1..1
+Inscription "inscrit" -- "est inscrit par" Utilisateur : 1..1
+Inscription "à" -- "a pour inscriptions" Evenement : 1..*
+
+' ==========================================
+' NOTES POUR LES ACTIONS ET RÈGLES MÉTIER
+' ==========================================
+
+note right of Utilisateur : Actions principales :\n- Authentification JWT (24h)\n- Hachage bcrypt mot de passe\n- Validation email et mdp >=6 chars
+
+note right of Evenement : Actions principales :\n- Filtrage par dates\n- Comptage participants\n- Publication/dépublication\n- Vérification propriété organisateur
+
+note right of Inscription : Actions principales :\n- Vérification doublon inscription\n- Annulation par propriétaire\n- Récupération par événement/utilisateur
+
+note as N1
+    <b>Règles de sécurité :</b>
+    - Routes publiques : /api/utilisateurs (login/register), /api/events (GET)
+    - Routes protégées : JWT obligatoire
+    - Contrôle rôles : organisateur/admin pour création événements
+    - Contrôle propriété : organisateur_id == utilisateur_id pour modification
+end note
+
+note as N2
+    <b>Cardinalités détaillées :</b>
+    - 1 Utilisateur = 1 Rôle (obligatoire)
+    - 1 Événement = 1 Catégorie (obligatoire)
+    - 1 Événement = 1 Lieu (obligatoire)
+    - 1 Événement = 1 Organisateur (obligatoire)
+    - 1 Inscription = 1 Utilisateur (obligatoire)
+    - 1 Événement = 0..* Inscriptions (optionnel)
+end note
+
+@enduml

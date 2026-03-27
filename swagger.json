@@ -1,0 +1,1682 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Evnto - Gestion d'événements",
+        "version": "1.0.0",
+        "description": "API REST pour la plateforme de gestion d'événements Evnto avec authentification JWT et système de rôles"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:5000/api",
+            "description": "Serveur de développement"
+        }
+    ],
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
+    "paths": {
+        "/utilisateurs/register": {
+            "post": {
+                "summary": "Inscription d'un nouvel utilisateur",
+                "description": "Crée un nouveau compte utilisateur avec validation des données",
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Utilisateur créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegisterResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides ou email déjà utilisé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/utilisateurs/login": {
+            "post": {
+                "summary": "Connexion utilisateur",
+                "description": "Authentifie un utilisateur et retourne un token JWT",
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Connexion réussie",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Email ou mot de passe incorrect",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/utilisateurs/me": {
+            "get": {
+                "summary": "Récupérer le profil utilisateur",
+                "description": "Retourne les informations du profil de l'utilisateur connecté",
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Profil récupéré avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserProfile"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token manquant ou invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Utilisateur introuvable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Mettre à jour le profil utilisateur",
+                "description": "Modifie les informations du profil de l'utilisateur connecté",
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProfileRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profil mis à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserProfile"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token manquant ou invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Utilisateur introuvable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/events": {
+            "get": {
+                "summary": "Récupérer tous les événements publics",
+                "description": "Retourne la liste de tous les événements publiés avec le nombre de participants",
+                "tags": [
+                    "Événements"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des événements récupérée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EventResponse"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Créer un nouvel événement",
+                "description": "Crée un événement (réservé aux organisateurs et administrateurs)",
+                "tags": [
+                    "Événements"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateEventRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Événement créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EventResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données manquantes ou invalides",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token manquant ou invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Rôle insuffisant (organisateur ou admin requis)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/events/filtered": {
+            "get": {
+                "summary": "Récupérer les événements filtrés par date",
+                "description": "Retourne les événements publics filtrés par plage de dates",
+                "tags": [
+                    "Événements"
+                ],
+                "parameters": [
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "description": "Date de début de la plage (format YYYY-MM-DD)"
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "description": "Date de fin de la plage (format YYYY-MM-DD)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Événements filtrés récupérés",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EventResponse"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dates manquantes ou format invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/events/{id}": {
+            "get": {
+                "summary": "Récupérer un événement par ID",
+                "description": "Retourne les détails d'un événement public spécifique",
+                "tags": [
+                    "Événements"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID de l'événement"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Événement récupéré avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EventResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "ID invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Événement non trouvé ou non publié",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Modifier un événement",
+                "description": "Modifie un événement (réservé au propriétaire ou administrateur)",
+                "tags": [
+                    "Événements"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID de l'événement à modifier"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateEventRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Événement modifié avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EventResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token manquant ou invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Non autorisé (propriétaire ou admin requis)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Événement non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Supprimer un événement",
+                "description": "Supprime un événement (réservé au propriétaire ou administrateur)",
+                "tags": [
+                    "Événements"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID de l'événement à supprimer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Événement supprimé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessMessage"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token manquant ou invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Non autorisé (propriétaire ou admin requis)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Événement non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/events/{id}/publish": {
+            "patch": {
+                "summary": "Publier/Dépublier un événement",
+                "description": "Change le statut de publication d'un événement (réservé au propriétaire ou administrateur)",
+                "tags": [
+                    "Événements"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID de l'événement"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PublishEventRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Statut de publication modifié",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EventResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token manquant ou invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Non autorisé (propriétaire ou admin requis)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Événement non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/events/{id}/image": {
+            "post": {
+                "summary": "Uploader une image pour un événement",
+                "description": "Ajoute une image à un événement (réservé au propriétaire ou administrateur)",
+                "tags": [
+                    "Événements"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID de l'événement"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UploadImageRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Image uploadée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessMessage"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token manquant ou invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Non autorisé (propriétaire ou admin requis)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Événement non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/inscriptions/events/{id}/inscriptions": {
+            "post": {
+                "summary": "S'inscrire à un événement",
+                "description": "Crée une inscription à un événement (vérification anti-doublon)",
+                "tags": [
+                    "Inscriptions"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID de l'événement"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Inscription créée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InscriptionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Déjà inscrit à cet événement",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token manquant ou invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Récupérer les inscriptions d'un événement",
+                "description": "Retourne la liste des inscriptions pour un événement (réservé au propriétaire)",
+                "tags": [
+                    "Inscriptions"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID de l'événement"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inscriptions récupérées avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/InscriptionResponse"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token manquant ou invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Non autorisé (propriétaire requis)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Événement non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/inscriptions/{id}": {
+            "delete": {
+                "summary": "Annuler une inscription",
+                "description": "Supprime une inscription (réservé au propriétaire de l'inscription)",
+                "tags": [
+                    "Inscriptions"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID de l'inscription à annuler"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inscription annulée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessMessage"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token manquant ou invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Inscription non trouvée ou non autorisée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/inscriptions/me": {
+            "get": {
+                "summary": "Récupérer mes inscriptions",
+                "description": "Retourne la liste des événements auxquels l'utilisateur est inscrit",
+                "tags": [
+                    "Inscriptions"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inscriptions récupérées avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/MyInscriptionResponse"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token manquant ou invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/me": {
+            "get": {
+                "summary": "Récupérer le profil utilisateur (endpoint alternatif)",
+                "description": "Retourne les informations du profil de l'utilisateur connecté (endpoint /api/users/me)",
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Profil récupéré avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserProfile"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token manquant ou invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Utilisateur introuvable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Mettre à jour le profil utilisateur (endpoint alternatif)",
+                "description": "Modifie les informations du profil de l'utilisateur connecté (endpoint /api/users/me)",
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProfileRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profil mis à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserProfile"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token manquant ou invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Utilisateur introuvable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/me/events": {
+            "get": {
+                "summary": "Récupérer mes événements créés",
+                "description": "Retourne la liste des événements créés par l'utilisateur (réservé aux organisateurs et administrateurs)",
+                "tags": [
+                    "Événements"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Événements récupérés avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EventResponse"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token manquant ou invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Rôle insuffisant (organisateur ou admin requis)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "Message d'erreur"
+                    },
+                    "error": {
+                        "type": "string",
+                        "description": "Détails de l'erreur (optionnel)"
+                    }
+                },
+                "required": [
+                    "message"
+                ]
+            },
+            "SuccessMessage": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "Message de succès"
+                    }
+                },
+                "required": [
+                    "message"
+                ]
+            },
+            "RegisterRequest": {
+                "type": "object",
+                "properties": {
+                    "nom_utilisateur": {
+                        "type": "string",
+                        "description": "Nom d'utilisateur"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "Adresse email"
+                    },
+                    "mot_de_passe": {
+                        "type": "string",
+                        "minLength": 6,
+                        "description": "Mot de passe (minimum 6 caractères)"
+                    },
+                    "prenom": {
+                        "type": "string",
+                        "description": "Prénom"
+                    },
+                    "nom": {
+                        "type": "string",
+                        "description": "Nom de famille"
+                    }
+                },
+                "required": [
+                    "nom_utilisateur",
+                    "email",
+                    "mot_de_passe"
+                ]
+            },
+            "RegisterResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "Message de confirmation"
+                    },
+                    "utilisateur": {
+                        "$ref": "#/components/schemas/UserProfile"
+                    }
+                },
+                "required": [
+                    "message",
+                    "utilisateur"
+                ]
+            },
+            "LoginRequest": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "Adresse email"
+                    },
+                    "mot_de_passe": {
+                        "type": "string",
+                        "description": "Mot de passe"
+                    }
+                },
+                "required": [
+                    "email",
+                    "mot_de_passe"
+                ]
+            },
+            "LoginResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "Message de confirmation"
+                    },
+                    "token": {
+                        "type": "string",
+                        "description": "Token JWT (valide 24h)"
+                    }
+                },
+                "required": [
+                    "message",
+                    "token"
+                ]
+            },
+            "UserProfile": {
+                "type": "object",
+                "properties": {
+                    "utilisateur_id": {
+                        "type": "integer",
+                        "description": "ID de l'utilisateur"
+                    },
+                    "nom_utilisateur": {
+                        "type": "string",
+                        "description": "Nom d'utilisateur"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "Adresse email"
+                    },
+                    "prenom": {
+                        "type": "string",
+                        "description": "Prénom"
+                    },
+                    "nom": {
+                        "type": "string",
+                        "description": "Nom de famille"
+                    },
+                    "role": {
+                        "$ref": "#/components/schemas/Role"
+                    }
+                },
+                "required": [
+                    "utilisateur_id",
+                    "nom_utilisateur",
+                    "email",
+                    "role"
+                ]
+            },
+            "UpdateProfileRequest": {
+                "type": "object",
+                "properties": {
+                    "nom_utilisateur": {
+                        "type": "string",
+                        "description": "Nouveau nom d'utilisateur"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "Nouvelle adresse email"
+                    },
+                    "prenom": {
+                        "type": "string",
+                        "description": "Nouveau prénom"
+                    },
+                    "nom": {
+                        "type": "string",
+                        "description": "Nouveau nom de famille"
+                    }
+                }
+            },
+            "Role": {
+                "type": "object",
+                "properties": {
+                    "libelle": {
+                        "type": "string",
+                        "enum": [
+                            "admin",
+                            "organisateur",
+                            "utilisateur"
+                        ],
+                        "description": "Rôle de l'utilisateur"
+                    }
+                },
+                "required": [
+                    "libelle"
+                ]
+            },
+            "CreateEventRequest": {
+                "type": "object",
+                "properties": {
+                    "titre": {
+                        "type": "string",
+                        "description": "Titre de l'événement"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description de l'événement"
+                    },
+                    "date_debut": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date et heure de début"
+                    },
+                    "date_fin": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date et heure de fin"
+                    },
+                    "categorie_id": {
+                        "type": "integer",
+                        "description": "ID de la catégorie"
+                    },
+                    "lieu_id": {
+                        "type": "integer",
+                        "description": "ID du lieu"
+                    }
+                },
+                "required": [
+                    "titre",
+                    "description",
+                    "date_debut",
+                    "date_fin",
+                    "categorie_id",
+                    "lieu_id"
+                ]
+            },
+            "UpdateEventRequest": {
+                "type": "object",
+                "properties": {
+                    "titre": {
+                        "type": "string",
+                        "description": "Nouveau titre"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Nouvelle description"
+                    },
+                    "date_debut": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Nouvelle date de début"
+                    },
+                    "date_fin": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Nouvelle date de fin"
+                    },
+                    "categorie_id": {
+                        "type": "integer",
+                        "description": "Nouvel ID de catégorie"
+                    },
+                    "lieu_id": {
+                        "type": "integer",
+                        "description": "Nouvel ID de lieu"
+                    }
+                }
+            },
+            "PublishEventRequest": {
+                "type": "object",
+                "properties": {
+                    "est_publie": {
+                        "type": "boolean",
+                        "description": "Statut de publication"
+                    }
+                },
+                "required": [
+                    "est_publie"
+                ]
+            },
+            "UploadImageRequest": {
+                "type": "object",
+                "properties": {
+                    "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "Fichier image à uploader"
+                    }
+                },
+                "required": [
+                    "image"
+                ]
+            },
+            "EventResponse": {
+                "type": "object",
+                "properties": {
+                    "evenement_id": {
+                        "type": "integer",
+                        "description": "ID de l'événement"
+                    },
+                    "titre": {
+                        "type": "string",
+                        "description": "Titre de l'événement"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description de l'événement"
+                    },
+                    "date_debut": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date et heure de début"
+                    },
+                    "date_fin": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date et heure de fin"
+                    },
+                    "est_publie": {
+                        "type": "boolean",
+                        "description": "Statut de publication"
+                    },
+                    "organisateur_id": {
+                        "type": "integer",
+                        "description": "ID de l'organisateur"
+                    },
+                    "categorie_id": {
+                        "type": "integer",
+                        "description": "ID de la catégorie"
+                    },
+                    "lieu_id": {
+                        "type": "integer",
+                        "description": "ID du lieu"
+                    },
+                    "cree_le": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date de création"
+                    },
+                    "participantsCount": {
+                        "type": "integer",
+                        "description": "Nombre de participants inscrits"
+                    }
+                },
+                "required": [
+                    "evenement_id",
+                    "titre",
+                    "description",
+                    "date_debut",
+                    "date_fin",
+                    "est_publie",
+                    "organisateur_id",
+                    "categorie_id",
+                    "lieu_id",
+                    "cree_le"
+                ]
+            },
+            "InscriptionResponse": {
+                "type": "object",
+                "properties": {
+                    "inscription_id": {
+                        "type": "integer",
+                        "description": "ID de l'inscription"
+                    },
+                    "utilisateur_id": {
+                        "type": "integer",
+                        "description": "ID de l'utilisateur inscrit"
+                    },
+                    "evenement_id": {
+                        "type": "integer",
+                        "description": "ID de l'événement"
+                    },
+                    "date_inscription": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date d'inscription"
+                    }
+                },
+                "required": [
+                    "inscription_id",
+                    "utilisateur_id",
+                    "evenement_id",
+                    "date_inscription"
+                ]
+            },
+            "MyInscriptionResponse": {
+                "type": "object",
+                "properties": {
+                    "inscription_id": {
+                        "type": "integer",
+                        "description": "ID de l'inscription"
+                    },
+                    "utilisateur_id": {
+                        "type": "integer",
+                        "description": "ID de l'utilisateur"
+                    },
+                    "evenement_id": {
+                        "type": "integer",
+                        "description": "ID de l'événement"
+                    },
+                    "date_inscription": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date d'inscription"
+                    },
+                    "evenement": {
+                        "$ref": "#/components/schemas/EventResponse"
+                    }
+                },
+                "required": [
+                    "inscription_id",
+                    "utilisateur_id",
+                    "evenement_id",
+                    "date_inscription",
+                    "evenement"
+                ]
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Utilisateurs",
+            "description": "Gestion des utilisateurs, authentification et profils"
+        },
+        {
+            "name": "Événements",
+            "description": "Gestion des événements (CRUD, publication, filtrage)"
+        },
+        {
+            "name": "Inscriptions",
+            "description": "Gestion des inscriptions aux événements"
+        }
+    ]
+}

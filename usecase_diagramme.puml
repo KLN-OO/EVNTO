@@ -1,0 +1,63 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Utilisateur Anonyme" as ANONYME
+actor "Utilisateur Authentifié" as AUTH
+actor "Organisateur/Admin" as ORG
+
+package "API Utilisateurs" {
+  usecase "S'inscrire / register" as UC_REGISTER
+  usecase "Se connecter / login" as UC_LOGIN
+  usecase "Voir profil / me" as UC_ME
+  usecase "Modifier profil / me" as UC_UPDATE_ME
+}
+
+package "API Événements" {
+  usecase "Lister événements publics / GET /events" as UC_EVENTS_LIST
+  usecase "Filtrer événements / GET /events/filtered" as UC_EVENTS_FILTER
+  usecase "Voir événement / GET /events/{id}" as UC_EVENT_READ
+  usecase "Créer événement / POST /events" as UC_EVENT_CREATE
+  usecase "Modifier événement / PUT /events/{id}" as UC_EVENT_UPDATE
+  usecase "Publier événement / PATCH /events/{id}/publish" as UC_EVENT_PUBLISH
+  usecase "Supprimer événement / DELETE /events/{id}" as UC_EVENT_DELETE
+  usecase "Uploader image / POST /events/{id}/image" as UC_EVENT_IMAGE
+  usecase "Voir mes événements / GET /users/me/events" as UC_USER_EVENTS
+}
+
+package "API Inscriptions" {
+  usecase "S'inscrire à un événement / POST /inscriptions/events/{id}/inscriptions" as UC_INSCRIPTION_CREATE
+  usecase "Annuler inscription / DELETE /inscriptions/{id}" as UC_INSCRIPTION_DELETE
+  usecase "Voir inscriptions événement / GET /inscriptions/events/{id}/inscriptions" as UC_INSCRIPTION_EVENT
+  usecase "Voir mes inscriptions / GET /inscriptions/me" as UC_INSCRIPTION_MY
+}
+
+ANONYME --> UC_REGISTER
+ANONYME --> UC_LOGIN
+ANONYME --> UC_EVENTS_LIST
+ANONYME --> UC_EVENTS_FILTER
+ANONYME --> UC_EVENT_READ
+
+AUTH --> UC_ME
+AUTH --> UC_UPDATE_ME
+AUTH --> UC_INSCRIPTION_CREATE
+AUTH --> UC_INSCRIPTION_DELETE
+AUTH --> UC_INSCRIPTION_MY
+
+ORG --> UC_EVENT_CREATE
+ORG --> UC_EVENT_UPDATE
+ORG --> UC_EVENT_PUBLISH
+ORG --> UC_EVENT_DELETE
+ORG --> UC_EVENT_IMAGE
+ORG --> UC_USER_EVENTS
+ORG --> UC_INSCRIPTION_EVENT
+
+note right of UC_EVENT_CREATE
+  besoin de JWT + role organisateur/admin
+end note
+
+note right of UC_INSCRIPTION_EVENT
+  seul l'organisateur ou admin peut consulter
+end note
+
+@enduml

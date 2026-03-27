@@ -1,0 +1,5 @@
+KHZEI9hdfh64ZH3J_fehJ736GDFJkdfhfu736KHZEI9hdfh64ZH3J_fehJ736GDFJkdfhfu736
+cd C:\wamp64\www\Evnto\server\node server.js
+cd C:\wamp64\www\Evnto\client\npm run dev
+
+
